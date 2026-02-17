@@ -20,4 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("conversor/", include("conversor.urls")),
+    path('', include('conversor.urls')),  # ← Opcional: redirigir raíz
+
 ]
