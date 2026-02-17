@@ -1,0 +1,87 @@
+{% extends "conversor/base.html" %}
+
+{% block title %}{{ magnitud.nombre }} · Conversor{% endblock %}
+
+{% block content %}
+<header class="app-header">
+    <div class="app-title-group">
+        <h1>{{ magnitud.especialidad.nombre }} · {{ magnitud.nombre }}</h1>
+        <p>Convierte entre unidades de esta magnitud de forma instantánea.</p>
+    </div>
+    <div class="badge-pill">
+        <span class="badge-dot"></span>
+        <span>{{ unidades.count }} unidades disponibles</span>
+    </div>
+</header>
+
+<main class="converter-layout">
+    <section class="converter-form">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>
+                        <span>Valor</span>
+                        <input class="input" type="number" step="any" name="valor" required>
+                    </label>
+                </div>
+
+                <div class="form-field">
+                    <label>
+                        <span>Unidad origen</span>
+                        <select class="select" name="unidad_origen">
+                            {% for u in unidades %}
+                                <option value="{{ u.id }}">{{ u.nombre }} ({{ u.simbolo }})</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+
+                <div class="form-field">
+                    <label>
+                        <span>Unidad destino</span>
+                        <select class="select" name="unidad_destino">
+                            {% for u in unidades %}
+                                <option value="{{ u.id }}">{{ u.nombre }} ({{ u.simbolo }})</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <button class="button-primary" type="submit">
+                Convertir
+            </button>
+
+            {% if error %}
+                <div class="alert-error">
+                    {{ error }}
+                </div>
+            {% endif %}
+        </form>
+    </section>
+
+    <aside class="result-panel {% if resultado is None %}empty{% endif %}">
+        <div class="result-label">Resultado</div>
+        {% if resultado is not None %}
+            <div class="result-main">{{ resultado }}</div>
+            <div class="result-sub">
+                {% if unidad_origen_sel and unidad_destino_sel %}
+                    De {{ unidad_origen_sel.nombre }} ({{ unidad_origen_sel.simbolo }})
+                    a {{ unidad_destino_sel.nombre }} ({{ unidad_destino_sel.simbolo }})
+                {% else %}
+                    Conversión realizada.
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="result-sub">
+                Ingresa un valor y pulsa <strong>Convertir</strong> para ver el resultado aquí.
+            </p>
+        {% endif %}
+    </aside>
+</main>
+
+<a class="back-link" href="{% url 'conversor:seleccionar_magnitud' %}">
+    ← Volver a especialidades
+</a>
+{% endblock %}

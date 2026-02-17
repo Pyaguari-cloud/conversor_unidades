@@ -1,0 +1,39 @@
+{% extends "conversor/base.html" %}
+
+{% block title %}Seleccionar magnitud{% endblock %}
+
+{% block content %}
+<header class="app-header">
+    <div class="app-title-group">
+        <h1>Conversor universal</h1>
+        <p>Elige una especialidad y una magnitud para comenzar.</p>
+    </div>
+    <div class="badge-pill">
+        <span class="badge-dot"></span>
+        <span>{{ especialidades|length }} especialidades activas</span>
+    </div>
+</header>
+
+<main>
+    {% for esp in especialidades %}
+        <section class="category-block">
+            <div class="category-header">
+                <h2>{{ esp.nombre }}</h2>
+                <span>{{ esp.magnitudes.count }} magnitudes</span>
+            </div>
+            <ul class="magnitude-list">
+                {% for mag in esp.magnitudes.all %}
+                    <li>
+                        <a class="magnitude-pill" href="{% url 'conversor:convertir' mag.id %}">
+                            {{ mag.nombre }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li style="color: #9ca3af; font-size: 0.8rem;">No hay magnitudes para esta especialidad.</li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endfor %}
+</main>
+
+{% endblock %}
